@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="register-container">
+      <form id="register-form">
+        <h2>Register</h2>
+        <input type="text" name="username" placeholder="Username" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <input
+          type="password"
+          name="confirm-password"
+          placeholder="Confirm Password"
+          required
+        />
+        <button type="submit">Register</button>
+      </form>
+    </div>
+    <script>
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); 
+
+          const username = event.target.username.value;
+          const password = event.target.password.value;
+
+          // Fetch the users from the JSON server
+          fetch("http://localhost:3000/users")
+            .then((response) => response.json())
+            .then((users) => {
+              // Check if the username already exists
+              const userExists = users.some(
+                (user) => user.username === username
+              );
+
+              if (userExists) {
+                alert("Username already exists.");
+              } else {
+                fetch("http://localhost:3000/users", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({ username, password }),
+                })
+                  .then((response) => response.json())
+                  .then((newUser) => {
+                    console.log("New user added:", newUser);
+                    alert("Registration successful!");
+                  })
+                  .catch((error) => {
+                    console.error("Error adding user:", error);
+                  });
+              }
+            })
+            .catch((error) => {
+              console.error("Error fetching users:", error);
+            });
+        });
+    </script>
+  </body>
+</html>

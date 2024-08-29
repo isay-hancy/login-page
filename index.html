@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <form id="login-form">
+        <h2>Login</h2>
+        <input type="text" name="username" placeholder="Username" required />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+        />
+        <button type="submit">Login</button>
+      </form>
+      <a href="register.html">Not Logged In ?</a>
+    </div>
+    <script>
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent form from submitting the traditional way
+
+          const username = event.target.username.value;
+          const password = event.target.password.value;
+
+          // Fetch the users from the JSON server
+          fetch("http://localhost:3000/users")
+            .then((response) => response.json())
+            .then((users) => {
+              // Check if the username and password match
+              const user = users.find(
+                (user) =>
+                  user.username === username && user.password === password
+              );
+
+              if (user) {
+                alert("Login successful!");
+              } else {
+                alert("Invalid username or password.");
+              }
+            });
+        });
+    </script>
+  </body>
+</html>
